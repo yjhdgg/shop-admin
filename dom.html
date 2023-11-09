@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      ul {
+        margin: 0;
+      }
+      .outer {
+        height: 500px;
+        width: 500px;
+        background-color: bisque;
+        margin: 0 auto;
+        /* font-size: 30px; */
+        position: relative;
+      }
+      .box {
+        width: 200px;
+        height: 100px;
+        background-color: coral;
+      }
+      .box1 {
+        width: 200px;
+        background-color: red;
+        position: absolute;
+        top: 0;
+        left: 0;
+        bottom: 20px;
+        overflow-y: auto;
+      }
+      .box2 {
+        height: 20px;
+        width: 200px;
+        background-color: blue;
+        position: absolute;
+        bottom: 0px;
+      }
+      .box3 {
+        height: 100px;
+        width: 100px;
+        background-color: blueviolet;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="box"></div>
+    <div class="outer">
+      <div class="box1">
+        <ul>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+          <li>1</li>
+          <li>2</li>
+          <li>3</li>
+          <li>4</li>
+          <li>5</li>
+          <li>6</li>
+        </ul>
+      </div>
+      <div class="box2">
+        <span>111</span>
+        <span>222</span>
+      </div>
+      <!-- <div class="box3">3</div> -->
+    </div>
+  </body>
+</html>
