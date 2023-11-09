@@ -8,7 +8,7 @@
       <el-container>
         <el-aside width="220px" class="image-aside">
           <div class="top">
-            <div class="top-item" v-for="(item, index) in params.data"
+            <div class="top-item" v-for="(item, index) in params.classList"
                  :key="index">
               <span>{{ item.name }}</span>
               <div>
@@ -20,8 +20,8 @@
             </div>
           </div>
           <div class="bottom">
-            <el-button :disabled="params.page==1" @click="backPage" :icon="ArrowLeft"/>
-            <el-button :disabled="params.page==params.pageCount" @click="nextPage" :icon="ArrowRight"/>
+            <el-button :disabled="params.page===1" @click="backPage" :icon="ArrowLeft"/>
+            <el-button :disabled="params.page===params.pageCount" @click="nextPage" :icon="ArrowRight"/>
           </div>
         </el-aside>
         <el-main class="image-main">
@@ -52,93 +52,31 @@
 import {ArrowLeft, CloseBold, Edit} from '@element-plus/icons-vue';
 import {ArrowRight} from '@element-plus/icons-vue';
 import {ref, onMounted} from 'vue'
-import {useOtherStore} from "@/store/module/other.js";
-import {notify} from "@/utils/utils.js";
+import {otherHooks} from "@/composables/otherHooks.js";
 import Dialog from "@/components/Dialog.vue";
 
 const container_height = ref()
-const dialogVisible = ref()
-const otherStore = useOtherStore()
-const params = ref({
-  id: '',
-  page: 1,
-  size: 10,
-  order: '',
-  name: '',
-  total: '',
-  pageCount: 1,
-  data: [],
-})
-const type = ref()
-const formRef = ref()
+
+const {
+  params, dialogVisible, formRef,
+  init,
+  addGalleryClassClick,
+  delGalleryClassClick,
+  updateGalleryClassClick,
+  saveHandler,
+  cancelHandler,
+  backPage,
+  nextPage,
+} = otherHooks()
 const rules = ref()
 
-const init = async () => {
-  const result = await otherStore.getGalleryList(params.value)
-  params.value.data = result.list.slice().sort((a, b) => b.order - a.order);
-  params.value.total = result.totalCount
-  console.log(result)
-  params.value.pageCount = Math.ceil(result.totalCount / params.value.size);
-}
+
 onMounted(() => {
   const windowHeight = window.innerHeight || document.body.clientHeight;
   container_height.value = (windowHeight - 64 - 44 - 36);
-  init()
+  init();
 })
-const addGalleryClassClick = () => {
-  dialogVisible.value = true
-  type.value = 'add'
-}
-const delGalleryClassClick = (item) => {
-  otherStore.deleteGalleryClass(item).then(res => {
-    init()
-    notify("删除成功")
-  }).catch()
 
-}
-const updateGalleryClassClick = (item) => {
-  dialogVisible.value = true
-  type.value = 'update'
-  params.value.name = item.name
-  params.value.order = item.order
-  params.value.id = item.id
-}
-const saveHandler = () => {
-  switch (type.value) {
-    case 'add': {
-      otherStore.addGalleryClass(params.value)
-      notify("添加成功")
-      cancelHandler()
-      break
-    }
-    case 'update': {
-      otherStore.updateGalleryClass(params.value)
-      notify("修改成功")
-      cancelHandler()
-      break
-    }
-  }
-  init()
-}
-const cancelHandler = () => {
-  dialogVisible.value = false
-  params.value.name = ''
-  params.value.order = ''
-  params.value.id = ''
-}
-const backPage = () => {
-  if (params.value.page > 1) {
-    params.value.page -= 1;
-    init();
-  }
-};
-
-const nextPage = () => {
-  if (params.value.page < params.value.pageCount) {
-    params.value.page += 1;
-    init();
-  }
-};
 </script>
 
 <style lang="scss" scoped>
@@ -167,7 +105,7 @@ const nextPage = () => {
   .top {
     position: absolute;
     top: 0;
-    right: 0px;
+    right: 0;
     left: 0;
     bottom: 50px;
     overflow-y: auto;
@@ -180,13 +118,15 @@ const nextPage = () => {
       display: flex;
       justify-content: space-between;
       border-top: 1px solid #f3f4f6;
-      z-index:2
+      z-index: 2
     }
-    .top-item:hover{
+
+    .top-item:hover {
       background-color: rgba(59, 130, 246, .5);
       position: relative;
 
     }
+
     .top-item:last-child {
       border-bottom: 1px solid #f3f4f6;
     }
@@ -213,7 +153,7 @@ const nextPage = () => {
 
     position: absolute;
     bottom: 0;
-    right: 0px;
+    right: 0;
     left: 0;
     height: 50px;
   }
